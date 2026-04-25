@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demoMaker BETA – Online DAW</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="demomaker.css">
+
+    <link rel="manifest" href="manifest.json">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js');
+        });
+      }
+    </script>
+
+</head>
+
+<body>
+ <div class="wrapper">
+
+    <header class="topbar">
+    <div class="logo">
+        <h1>demoMaker <span>BETA</span></h1>
+    </div>
+
+    <div id="authBox">
+    <div id="authStatusButton">Nincs bejelentkezve</div>
+    <div id="authDropdown">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Jelszó">
+        <button id="loginBtn">Bejelentkezés</button>
+        <button id="registerBtn">Regisztráció</button>
+        <button id="logoutBtn" style="display:none;">Kilépés</button>
+    </div>
+    </div>
+    </header>
+
+   <div class="track-actions">
+        <div class="add-track-wrap">
+
+         <button class="add-track" id="addTrackBtn">
+             <span>+</span>
+             add track
+         </button>
+
+        <div class="track-picker" id="trackPicker">
+          <button data-type="drum">drum</button>
+          <button data-type="bass">bass</button>
+          <button data-type="synth">synth</button>
+          <button data-type="guitar">guitar</button>
+          <button data-type="vocal">vocal</button>
+          <button data-type="sample">sample</button>
+        </div>
+       </div>
+
+       <button class="project-btn">New</button>
+       <button class="project-btn">Save</button>
+       <div class="add-track-wrap">
+            <button class="project-btn" id="openMenuBtn">Open</button>
+            <div class="track-picker" id="openPicker">
+                <button id="openLocalBtn">From PC</button>
+                <button id="openCloudBtn">From Cloud</button>
+            </div>
+       </div>
+       <button class="project-btn">Cloud</button>
+       <button class="project-btn">Import</button>
+       <button class="project-btn">Export</button>
+        
+    </div>
+    <input type="file" id="projectImportInput" accept=".json" style="display: none;">
+    <input type="file" id="audioImportInput" accept="audio/*" style="display: none;">
+    
+    <div class="control-panel">
+       <button id="enableAudioBtn">Enable Audio</button>
+       <button class="loop-btn">
+       Loop
+       </button>
+       <button class="rewind-btn" title="Return to Start">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+         <path d="M2 3v10h2V3H2zm11 10L6 8l7-5v10z" fill="currentColor"/>
+        </svg>
+       </button>
+       <button class="play-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+         <polygon points="3,2 13,8 3,14" fill="currentColor"/>
+        </svg>
+       </button>
+       <button class="rec-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+         <circle cx="8" cy="8" r="6" fill="currentColor"/>
+        </svg>
+       </button>
+       <button class="click-btn">
+       Click
+       </button>
+       <div class="bpm-wrap">
+        <input type="text" class="bpm-input" value="120" maxlength="3">
+       </div>
+       <div class="time-signature-wrap">
+        <input type="text" class="time-signature-input" value="4/4" maxlength="5">
+       </div>
+       <div class="grid-wrap">
+        <button class="grid-btn">1/8</button>
+
+        <div class="grid-dropdown">
+         <button data-grid="1/4">1/4</button>
+         <button data-grid="1/4T">1/4T</button>
+         <button data-grid="1/8" class="active">1/8</button>
+         <button data-grid="1/8T">1/8T</button>
+         <button data-grid="1/16">1/16</button>
+         <button data-grid="1/16T">1/16T</button>
+         <button data-grid="1/32">1/32</button>
+         <button data-grid="1/64">1/64</button>
+        </div>
+       </div>
+       <button class="undo-btn" title="Undo (Ctrl+Z)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+         <path d="M3 7v6h6"></path>
+         <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+        </svg>
+       </button>
+       <button class="snap-btn" title="Snap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+         <line x1="12" y1="5" x2="12" y2="19"/>
+  
+         <line x1="4" y1="12" x2="10" y2="12"/>
+         <polyline points="8,10 10,12 8,14"/>
+  
+         <line x1="20" y1="12" x2="14" y2="12"/>
+         <polyline points="16,10 14,12 16,14"/>
+        </svg>
+       </button>
+       <button class="select-btn" title="Select">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+         <rect x="4" y="6" width="16" height="12" stroke-dasharray="4 3"/>
+        </svg>
+       </button>
+       <button class="cut-btn" title="Cut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+         <circle cx="6" cy="6" r="3"/>
+         <circle cx="6" cy="18" r="3"/>
+         <path d="M20 4L8.5 14.5"/>
+         <path d="M20 20L8.5 9.5"/>
+        </svg>
+       </button>
+       <button class="duplicate-btn" title="Duplicate">
+        <svg width="64" height="64" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <rect x="10" y="10" width="22" height="22" rx="3"
+         stroke="currentColor" stroke-width="3"/>
+         <rect x="16" y="16" width="22" height="22" rx="3"
+         stroke="currentColor" stroke-width="3"/>
+        </svg>
+       </button>
+       <button class="delete-btn" title="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+         <path d="M4 7H20"/>
+         <path d="M9 7V4H15V7"/>
+         <rect x="6" y="7" width="12" height="13" rx="2"/>
+         <path d="M10 11V17M14 11V17"/>
+        </svg>
+       </button>
+       <button class="play-time-btn">00:00.00
+       </button>
+    </div>
+
+    <main>
+        <div class="track-list" id="trackList">
+           <input type="text" id="projectName" class="project-name-input" value="My Project" spellcheck="false" title="Project Name">
+
+           <div class="timeline-ruler" id="timelineRuler">
+               <div class="ruler-inner" id="rulerInner">
+                    <div id="loopRegion" class="loop-region" style="display: none;">
+                        <div class="loop-handle left" data-side="left"></div>
+                        <div class="loop-handle right" data-side="right"></div>
+                    </div>
+               </div>
+           </div>
+           <div class="timeline-scroll" id="timelineScroll"></div>
+           <div id="playhead"></div>
+
+           <div class="zoom-container" id="zoomContainer" style="display: none;">
+            <label>
+             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="11" y1="8" x2="11" y2="14"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+             </svg>
+             <input type="range" id="zoomSlider" min="0.2" max="1.8" step="0.05" value="1.0">
+             <span id="zoomValueDisplay" class="slider-value">1.0x</span>
+             </label>
+            </div>
+        </div>
+    </main>
+
+    <div class="mixer-section-header">
+        <div class="mixer-line"></div>
+        <span>MIXER CONSOLE</span>
+        <div class="mixer-line"></div>
+    </div>
+
+    <div class="mixer-panel" id="mixerPanel">
+        <div class="mixer-tracks-container" id="mixerTracks">
+        </div>
+        
+        <div class="mixer-master-container">
+            <div class="mixer-channel master-channel" data-track-id="master">
+                <div class="mix-header">MASTER</div>
+                <div class="mix-inserts">Inserts</div>
+
+                <div class="master-meter-container">
+                    <div class="clip-led" title="Kattints a törléshez"></div>
+                    <div class="master-meter-wrap">
+                        <div class="vu-meter-bg master-vu"></div>
+                    </div>
+                </div>
+
+                <div class="mix-pan-wrap">
+                    <input type="range" min="-50" max="50" value="0" class="master-pan-slider mini-pan-fader">
+                </div>
+                <div class="fader-wrapper">
+                    <input type="range" min="0" max="100" value="80" class="master-vol-slider vertical-fader">
+                </div>
+                <div class="mix-val master-vol-val">80%</div>
+            </div>
+        </div>
+    </div>
+
+   <div id="cloud-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 4000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div style="background: #111; border: 1px solid var(--accent); border-radius: 6px; width: 90%; max-width: 600px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                <h2 style="margin: 0; font-family: var(--font-mono); color: var(--accent); text-transform: uppercase;">Cloud Projects</h2>
+                <button id="close-cloud-btn" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div id="cloud-project-list" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <div style="color: #888; text-align: center; font-family: var(--font-mono);">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 demoMaker – Tape vibes. Modern tools.
+    </footer>
+
+   <div id="seq-modal-overlay">
+    <div id="seq-modal">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; gap: 10px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <h2 id="seq-title" style="margin: 0; font-family: var(--font-mono); font-size: 1.2rem; text-transform: uppercase;">Editor</h2>
+            
+            <button id="editor-play-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16"><polygon points="3,2 13,8 3,14" fill="currentColor"/></svg>
+            </button>
+
+            <select id="preset-selector" style="background: #222; color: #fff; border: 1px solid #555; padding: 4px 8px; font-family: var(--font-mono); border-radius: 3px; outline: none; cursor: pointer; display: none;">
+            </select>
+        </div>
+        <button id="close-seq-btn" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">×</button>
+    </div>
+    
+    <div id="seq-grid" style="display: flex; flex-direction: column; gap: 4px; overflow-x: auto;"></div>
+   </div>
+</div>
+ </div>
+
+<script src="fx-engine.js"></script>
+<script src="synth-engine.js"></script> 
+<script src="demomaker.js"></script> 
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDFK6o6sJnFJImBhkX_ZfQq6fXldLZt7vA",
+  authDomain: "calendarformeapp.firebaseapp.com",
+  projectId: "calendarformeapp",
+  storageBucket: "calendarformeapp.firebasestorage.app",
+  messagingSenderId: "421913143205",
+  appId: "1:421913143205:web:24dc04f3c768f99356aa4c"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.currentCloudProjectId = null;
+window.currentCloudProjectName = null;
+
+// --- Auth ---
+const emailInput = document.getElementById('email');
+const passInput = document.getElementById('password');
+const logoutBtn = document.getElementById('logoutBtn');
+const authStatusButton = document.getElementById("authStatusButton");
+const authDropdown = document.getElementById("authDropdown");
+
+document.getElementById('loginBtn').onclick = async () => {
+  try { await signInWithEmailAndPassword(auth, emailInput.value, passInput.value); } 
+  catch(e){ alert("Hiba: "+e.message); }
+};
+document.getElementById('registerBtn').onclick = async () => {
+  try { await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value); alert("Regisztráció sikeres"); } 
+  catch(e){ alert("Hiba: "+e.message); }
+};
+logoutBtn.onclick = async () => { await signOut(auth); };
+
+authStatusButton.onclick = () => { authDropdown.classList.toggle("open"); };
+document.addEventListener("click", (e) => {
+    if (!document.getElementById('authBox').contains(e.target)) authDropdown.classList.remove("open");
+});
+onAuthStateChanged(auth, user => {
+    if (user) {
+        authStatusButton.textContent = user.email;
+        logoutBtn.style.display = "block";
+    } else {
+        authStatusButton.textContent = "Nincs bejelentkezve";
+        logoutBtn.style.display = "none";
+    }
+});
+
+// --- CLOUD MENTÉS (RENDER + FIREBASE FIRESTORE) ---
+document.querySelectorAll('.project-btn').forEach(btn => {
+    if (btn.textContent === 'Cloud') {
+        btn.onclick = async () => {
+            const user = auth.currentUser;
+            if (!user) {
+                alert("A felhőbe mentéshez be kell jelentkezned!");
+                return;
+            }
+
+            const projNameInput = document.getElementById('projectName');
+            const defaultName = projNameInput ? projNameInput.value : "My Project";
+            
+            const projectName = prompt("Adj egy nevet a dalnak:", defaultName);
+            if (!projectName) return;
+            
+            // Szinkronizáljuk a beírt nevet a felülettel
+            if (projNameInput) projNameInput.value = projectName;
+
+            const originalText = btn.textContent;
+            let isUploadFinished = false; // Ezzel figyeljük, hogy végeztünk-e
+
+            // --- ÚJ: ALVÁS FIGYELŐ IDŐZÍTŐ ---
+            // Ha 4 másodperc alatt nem lépünk tovább, átírjuk a gombot
+            const sleepWarningTimer = setTimeout(() => {
+                if (!isUploadFinished) {
+                    btn.textContent = 'Waking up server... (~30s)';
+                    btn.style.color = '#ff8c00'; // Narancssárga, hogy feltűnjön
+                }
+            }, 4000);
+
+            try {
+                btn.textContent = 'Uploading Audio...';
+                btn.style.color = '#ffd93d'; 
+                
+                // Itt hívjuk a golyóálló, snapshot-os mentőfüggvényünket
+                const { projectData, uploadedFileIds } = await window.serializeProject(true); 
+
+                // Ha idáig eljutott a kód, az audiók fent vannak, a szerver tuti ébren van!
+                btn.textContent = 'Saving Project...';
+                btn.style.color = '#00ffd5';
+                
+                const jsonString = JSON.stringify(projectData);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const formData = new FormData();
+                formData.append("file", blob, "demomaker_project.json");
+
+                const backendUrl = "https://music-backend-jq1s.onrender.com/upload-project";
+                const response = await fetch(backendUrl, { method: "POST", body: formData });
+                const data = await response.json();
+
+                // Sikeresen végeztünk
+                isUploadFinished = true;
+                clearTimeout(sleepWarningTimer);
+
+                if (data.url) {
+                    uploadedFileIds.push(data.public_id);
+
+                    // --- FELÜLÍRÁS (SAVE) VAGY ÚJ MENTÉS (SAVE AS) LOGIKA ---
+                    if (window.currentCloudProjectId && projectName === window.currentCloudProjectName) {
+        
+                    // HA NEM VÁLTOZOTT A NÉV ÉS VAN ID: FELÜLÍRJUK AZ EDDIGIT
+                    const projectRef = doc(db, "projects", window.currentCloudProjectId);
+                    await updateDoc(projectRef, {
+                       url: data.url,
+                       fileIds: uploadedFileIds, 
+                       updatedAt: new Date().toISOString() // Rögzítjük a frissítés idejét
+                    });
+                    alert(`A "${projectName}" sikeresen frissítve a felhőben!`);
+        
+                 } else {
+        
+                      // HA ÚJ A NÉV, VAGY TELJESEN ÚJ PROJEKT: ÚJKÉNT MENTJÜK
+                    const docRef = await addDoc(collection(db, "projects"), {
+                        uid: user.uid,
+                        name: projectName,
+                        url: data.url,
+                        fileIds: uploadedFileIds, 
+                        createdAt: new Date().toISOString()
+                    });
+        
+                    // Megjegyezzük az új azonosítókat, hogy a KÖVETKEZŐ kattintás már felülírás legyen
+                    window.currentCloudProjectId = docRef.id;
+                    window.currentCloudProjectName = projectName;
+        
+                    alert(`A "${projectName}" új projektként mentve!`);
+                    }
+                 }
+            } catch(e) {
+                // Ha hiba volt, állítsuk le a stoppert
+                isUploadFinished = true;
+                clearTimeout(sleepWarningTimer);
+                console.error(e);
+                alert("Hiba a mentésnél: " + e.message);
+            }
+            
+            // UI visszaállítása az eredeti állapotra
+            isUploadFinished = true;
+            clearTimeout(sleepWarningTimer);
+            btn.textContent = originalText;
+            btn.style.color = '';
+        };
+    }
+    
+    // --- LOKÁLIS MENTÉS (Save to PC) ---
+    if (btn.textContent === 'Save') {
+        btn.onclick = async () => {
+            try {
+                const projNameInput = document.getElementById('projectName');
+                const safeName = projNameInput && projNameInput.value ? projNameInput.value.replace(/[^a-z0-9_ \-]/gi, '_') : 'demomaker_project';
+
+                const projectData = await window.serializeProject(false); 
+                const jsonString = JSON.stringify(projectData, null, 2); 
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none'; a.href = url; a.download = `${safeName}.json`;
+                document.body.appendChild(a); a.click();
+                URL.revokeObjectURL(url); document.body.removeChild(a);
+            } catch (err) { alert("Hiba a mentés során: " + err.message); }
+        };
+    }
+});
+
+// --- CLOUD MANAGER UI (Betöltés, Törlés, Duplikálás) ---
+const cloudModal = document.getElementById('cloud-modal-overlay');
+const cloudList = document.getElementById('cloud-project-list');
+document.getElementById('close-cloud-btn').onclick = () => cloudModal.style.display = 'none';
+
+document.getElementById('openCloudBtn').addEventListener('click', async (e) => {
+    e.stopPropagation();
+    document.getElementById('openPicker').classList.remove('show');
+    
+    const user = auth.currentUser;
+    if (!user) {
+        alert("A projektjeid megtekintéséhez be kell jelentkezned!");
+        return;
+    }
+
+    cloudModal.style.display = 'flex';
+    loadCloudProjects(user.uid);
+});
+
+async function loadCloudProjects(uid) {
+    cloudList.innerHTML = '<div style="color: #888; text-align: center;">Loading projects...</div>';
+    
+    try {
+        const q = query(collection(db, "projects"), where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        
+        cloudList.innerHTML = '';
+        if (querySnapshot.empty) {
+            cloudList.innerHTML = '<div style="color: #888; text-align: center;">Még nincs mentett projekted.</div>';
+            return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const dateStr = new Date(data.createdAt).toLocaleString();
+            
+            const row = document.createElement('div');
+            row.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; font-family: var(--font-mono);";
+            
+            row.innerHTML = `
+                <div>
+                    <div style="color: var(--accent); font-weight: bold;">${data.name}</div>
+                    <div style="font-size: 0.7rem; color: #888;">${dateStr}</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="cloud-action-btn load-btn" style="background: rgba(0,255,213,0.1); border: 1px solid var(--accent); color: var(--accent); cursor: pointer; padding: 4px 8px; border-radius: 2px;">Load</button>
+                    <button class="cloud-action-btn dup-btn" style="background: rgba(255,217,61,0.1); border: 1px solid #ffd93d; color: #ffd93d; cursor: pointer; padding: 4px 8px; border-radius: 2px;">Copy</button>
+                    <button class="cloud-action-btn del-btn" style="background: rgba(255,76,76,0.1); border: 1px solid #ff4c4c; color: #ff4c4c; cursor: pointer; padding: 4px 8px; border-radius: 2px;">Del</button>
+                </div>
+            `;
+
+            // Betöltés
+            row.querySelector('.load-btn').onclick = async () => {
+                cloudModal.style.display = 'none';
+                try {
+                    const response = await fetch(data.url);
+                    const projectData = await response.json();
+        
+                    projectData.projectName = data.name; 
+        
+                    // --- ÚJ: ELTÁROLJUK AZ ID-T ÉS A NEVET ---
+                    window.currentCloudProjectId = docSnap.id; 
+                    window.currentCloudProjectName = data.name;
+        
+                    window.loadProject(projectData);
+                } catch(e) { alert("Hiba a betöltéskor: " + e.message); }
+            };
+
+            // Duplikálás
+            row.querySelector('.dup-btn').onclick = async () => {
+                const newName = prompt("Új másolat neve:", data.name + " (Copy)");
+                if (!newName) return;
+                await addDoc(collection(db, "projects"), {
+                    uid: uid,
+                    name: newName,
+                    url: data.url, 
+                    createdAt: new Date().toISOString()
+                });
+                loadCloudProjects(uid); 
+            };
+
+            // Törlés
+            row.querySelector('.del-btn').onclick = async (e) => {
+                const btn = e.target;
+                if(confirm(`Biztos törlöd a "${data.name}" projektet? Minden felvett hangfájl is végleg törlődik a felhőből!`)) {
+                    btn.textContent = "Wait...";
+                    btn.style.opacity = "0.5";
+                    
+                    if (data.fileIds && data.fileIds.length > 0) {
+                        for (let pubId of data.fileIds) {
+                            try {
+                                const encodedId = encodeURIComponent(pubId);
+                                await fetch(`https://music-backend-jq1s.onrender.com/delete/${encodedId}`, { 
+                                    method: 'DELETE' 
+                                });
+                            } catch(err) {
+                                console.warn("Nem sikerült törölni egy fájlt:", pubId);
+                            }
+                        }
+                    }
+
+                    await deleteDoc(doc(db, "projects", docSnap.id));
+                    loadCloudProjects(uid); 
+                }
+            };
+
+            cloudList.appendChild(row);
+        });
+    } catch(e) {
+         cloudList.innerHTML = `<div style="color: red; text-align: center;">Hiba az adatbázis elérésekor.</div>`;
+    }
+}
+
+
+// --- PROJEKT BETÖLTÉSE (DESERIALIZÁCIÓ) ---
+window.loadProject = async function(projectData) {
+    if (!projectData || !projectData.tracks) return;
+
+    // 0. MASTER SÁV FX TAKARÍTÁSA BETÖLTÉS ELŐTT ---
+    const masterTrack = document.querySelector('.master-channel');
+    if (masterTrack && masterTrack.fxChain && masterTrack.fxChain.length > 0) {
+        masterTrack.fxChain.forEach(fx => {
+            if (fx.instance.output) fx.instance.output.disconnect();
+            if (fx.instance.lfo) { try { fx.instance.lfo.stop(); } catch(e) {} }
+        });
+        masterTrack.fxChain = [];
+        if (masterTrack.fxInputNode && masterTrack.fxOutputNode) {
+            masterTrack.fxInputNode.disconnect();
+            masterTrack.fxInputNode.connect(masterTrack.fxOutputNode);
+        }
+        const mixInserts = masterTrack.querySelector('.mix-inserts');
+        if (mixInserts) {
+            mixInserts.style.color = ''; mixInserts.style.borderColor = ''; mixInserts.style.background = '';
+        }
+    }
+    // --- MASTER TAKARÍTÁS VÉGE ---
+
+    // 1. Memóriaszivárgás megelőzése (FX láncok és Audio node-ok takarítása betöltés előtt)
+    document.querySelectorAll('.track-container').forEach(track => {
+        if (track.trackGainNode) track.trackGainNode.disconnect();
+        if (track.trackPannerNode) track.trackPannerNode.disconnect();
+        if (track.analyserNode) track.analyserNode.disconnect();
+        if (track.fxOutputNode) track.fxOutputNode.disconnect();
+        if (track.fxChain && track.fxChain.length > 0) {
+            track.fxChain.forEach(fx => {
+                if (fx.instance.output) fx.instance.output.disconnect();
+                if (fx.instance.lfo) { try { fx.instance.lfo.stop(); } catch(e) {} }
+            });
+        }
+        track.remove();
+    });
+
+    document.querySelectorAll('.mixer-channel:not(.master-channel)').forEach(m => m.remove());
+    trackCounter = 0;
+    window.audioPool = {};
+
+    const projNameInput = document.getElementById('projectName');
+    if (projNameInput) {
+        projNameInput.value = projectData.projectName || "My Project";
+        projNameInput.style.display = 'block';
+        document.title = projNameInput.value + " – demoMaker BETA"; 
+    }
+    
+    const rulerEl = document.getElementById('timelineRuler');
+    rulerEl.style.display = 'none';
+
+    if (projectData.bpm) {
+        bpm = projectData.bpm;
+        document.querySelector('.bpm-input').value = bpm;
+    }
+    if (projectData.timeSig) {
+        timeSig = projectData.timeSig;
+        document.querySelector('.time-signature-input').value = `${timeSig[0]}/${timeSig[1]}`;
+    }
+
+    for (const tData of projectData.tracks) {
+        createTrack(tData.type); 
+        
+        const tracks = document.querySelectorAll('.track-container');
+        const newTrack = tracks[tracks.length - 1];
+        const trackId = newTrack.dataset.trackId;
+        const mixerChan = document.querySelector(`.mixer-channel[data-track-id="${trackId}"]`);
+
+        newTrack.querySelector('.track-name').textContent = tData.name || "Track";
+        if (mixerChan) mixerChan.querySelector('.mix-header').textContent = tData.name || "Track";
+        const defaultPresets = {
+            'drum': 'TR-808 (Deep)',
+            'bass': 'Precision Bass (Punchy)',
+            'guitar': 'Telecaster (Twang)',
+            'synth': 'Classic Saw',
+            'vocal': 'Acoustic Piano', 
+            'sample': 'Acoustic Piano'
+        };
+        newTrack.dataset.preset = tData.preset || defaultPresets[tData.type] || 'Classic Saw';
+
+        const volSlider = newTrack.querySelector('.trk-vol-slider');
+        if (volSlider && tData.vol !== undefined) {
+            volSlider.value = tData.vol;
+            volSlider.nextElementSibling.textContent = tData.vol + '%';
+            if (mixerChan) {
+                mixerChan.querySelector('.mix-vol-slider').value = tData.vol;
+                mixerChan.querySelector('.mix-val').textContent = tData.vol + '%';
+            }
+            if (newTrack.trackGainNode) newTrack.trackGainNode.gain.value = tData.vol / 100;
+        }
+
+        const panSlider = newTrack.querySelector('.trk-pan-slider');
+        if (panSlider && tData.pan !== undefined) {
+            panSlider.value = tData.pan;
+            panSlider.nextElementSibling.textContent = tData.pan;
+            if (mixerChan) mixerChan.querySelector('.mix-pan-slider').value = tData.pan;
+            if (newTrack.trackPannerNode) newTrack.trackPannerNode.pan.value = tData.pan / 50;
+        }
+
+        const scSlider = newTrack.querySelector('.trk-sc-slider');
+        if (scSlider && tData.scAmount !== undefined) {
+            scSlider.value = tData.scAmount;
+            scSlider.nextElementSibling.textContent = tData.scAmount + '%';
+            const pumpBtn = newTrack.querySelector('.pump-btn');
+            if (pumpBtn) {
+                if (tData.scAmount > 0) pumpBtn.classList.add('engaged');
+                else pumpBtn.classList.remove('engaged');
+            }
+        }
+        
+        // AZ FX LÁNC BETÖLTÉST A KÜLÖNÁLLÓ SÁVOKRA:
+        if (tData.fxChain && tData.fxChain.length > 0) {
+            if (typeof window.restoreFxChain === 'function') {
+                window.restoreFxChain(newTrack, tData.fxChain);
+            }
+        }
+
+        // --- KLIPEK VISSZAÁLLÍTÁSA (Bisszamenőleges kompatibilitással) ---
+        const clipsContainer = newTrack.querySelector('.clips');
+        if (tData.clips) {
+            tData.clips.forEach(async cData => {
+                
+                // JAVÍTÁS: Ha egy régi mentést töltünk be, ahol még nem volt "type" mező, 
+                // az alapértelmezetten "audio" lesz, így nem vész el!
+                const clipType = cData.type || 'audio'; 
+
+                if (clipType === 'pattern') {
+                    const newClip = addPatternClipToTrack(clipsContainer, "Pattern", cData.start, cData.patternData.lengthInBars);
+                    newClip.patternData = cData.patternData; 
+                    newClip.dataset.duration = cData.duration;
+                    newClip.style.width = `${cData.duration * PX_PER_SECOND}px`;
+                    
+                    let waveColor = '#b084f7';
+                    if (tData.type === 'drum') waveColor = '#3fa9f5';
+                    else if (tData.type === 'bass') waveColor = '#ffd93d';
+                    else if (tData.type === 'guitar') waveColor = '#00ffd5';
+                    else if (tData.type === 'vocal') waveColor = '#ff7ac8';
+                    else if (tData.type === 'sample') waveColor = '#ff8c00';
+                    
+                    const canvas = newClip.querySelector('canvas');
+                    canvas.width = Math.min(cData.duration * PX_PER_SECOND, 16384);
+                    drawPattern(canvas, newClip, waveColor);
+
+                } else if (clipType === 'audio') {
+                    const assetId = cData.assetId || ('legacy_' + Math.floor(Math.random()*10000));
+                    
+                    const ghostClip = document.createElement('div');
+                    ghostClip.className = 'audio-clip';
+                    ghostClip.style.width = `${cData.duration * PX_PER_SECOND}px`;
+                    ghostClip.style.left = `${cData.start * PX_PER_SECOND}px`;
+                    ghostClip.style.background = 'rgba(0, 0, 0, 0.6)';
+                    ghostClip.style.border = '1px dashed #888';
+                    ghostClip.style.zIndex = '15';
+                    ghostClip.innerHTML = `<div style="font-size:9px; color:#00ffd5; font-family:var(--font-mono); width:100%; text-align:center; padding-top:10px;">Downloading...</div>`;
+                    clipsContainer.appendChild(ghostClip);
+
+                    if (!cData.audioData || cData.audioData.length < 5) {
+                        ghostClip.style.border = '1px dashed #ff4c4c';
+                        ghostClip.innerHTML = `<div style="font-size:9px; color:#ff4c4c; font-family:var(--font-mono); width:100%; text-align:center; padding-top:10px;">UPLOAD FAILED</div>`;
+                    } else {
+                        if (!window.audioPool[assetId]) {
+                            window.audioPool[assetId] = fetch(cData.audioData)
+                                .then(res => res.arrayBuffer())
+                                .then(arr => audioCtx.decodeAudioData(arr));
+                        }
+
+                        window.audioPool[assetId].then(audioBuffer => {
+                            ghostClip.remove(); 
+                            addClipToTrack(clipsContainer, audioBuffer, cData.name || "Audio", cData.start, cData.trimOffset || 0, cData.duration, assetId);
+                        }).catch(e => {
+                            console.error("Audio letöltési hiba:", e);
+                            ghostClip.style.border = '1px dashed #ff4c4c';
+                            ghostClip.innerHTML = `<div style="font-size:9px; color:#ff4c4c; font-family:var(--font-mono); width:100%; text-align:center; padding-top:10px;">FETCH ERROR</div>`;
+                        });
+                    }
+                }
+            });
+        }
+    } 
+
+    if (projectData.masterFx && projectData.masterFx.length > 0) {
+        const masterTrack = document.querySelector('.master-channel');
+        if (masterTrack && typeof window.restoreFxChain === 'function') {
+            // Inicializáljuk a Master FX node-okat, ha még nincsenek
+            if (!masterTrack.fxInputNode) {
+                masterTrack.fxInputNode = audioCtx.createGain();
+                masterTrack.fxOutputNode = audioCtx.createGain();
+            
+                // ROUTING: Panner -> [FX] -> Analyser
+                masterPanner.disconnect();
+                masterPanner.connect(masterTrack.fxInputNode);
+                masterTrack.fxOutputNode.connect(masterAnalyser);
+            }
+        
+            // Visszatöltjük a láncot
+            window.restoreFxChain(masterTrack, projectData.masterFx);
+        }
+    }
+
+    drawRuler();
+    drawAllGrids();
+    updateZoomVisibility();
+    
+    // JAVÍTÁS: Mindig visszahúzzuk a képernyőt az elejére (hogy ne legyenek elcsúszva a sávok)
+    if (typeof setScroll === 'function') setScroll(0); 
+    updatePlayheadVisuals();
+    
+    const openPicker = document.getElementById('openPicker');
+    if (openPicker) openPicker.classList.remove('show');
+    
+    // JAVÍTÁS: Egy pici késleltetés a vizuális frissítés miatt, hogy a böngésző ki tudja rajzolni a sávokat, MIELŐTT feldobja az ablakot!
+    setTimeout(() => {
+        alert("Projekt sikeresen betöltve!");
+    }, 150);
+};
+
+// --- LOKÁLIS FÁJL MEGNYITÁSA (From PC) ---
+const openLocalBtn = document.getElementById('openLocalBtn');
+const projectImportInput = document.getElementById('projectImportInput');
+
+openLocalBtn.addEventListener('click', () => {
+    projectImportInput.click();
+});
+
+projectImportInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        try {
+            const projectData = JSON.parse(event.target.result);
+            window.loadProject(projectData);
+        } catch (err) {
+            alert("Hiba a fájl olvasásakor: Nem érvényes demoMaker projekt.");
+        }
+    };
+    reader.readAsText(file);
+    projectImportInput.value = ''; 
+});
+
+// --- OPEN MENÜ (PC / CLOUD) LOGIKÁJA ---
+const openMenuBtn = document.getElementById('openMenuBtn');
+const openPicker = document.getElementById('openPicker');
+
+if (openMenuBtn && openPicker) {
+    openMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        openPicker.classList.toggle('show');
+    });
+}
+</script>
+</body>
+</html>
