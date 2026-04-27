@@ -250,7 +250,9 @@ function getTrackColor(trackContainer) {
 // ==========================================================
 // --- AUDIO RENDSZER ---
 // ==========================================================
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)({
+  latencyHint: 'interactive', // Ez kéri a rendszertől a legkisebb késleltetést
+});
 const masterGain = audioCtx.createGain();
 const masterPanner = audioCtx.createStereoPanner();
 const masterAnalyser = audioCtx.createAnalyser();
