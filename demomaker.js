@@ -4461,6 +4461,15 @@ const initWelcomeModal = () => {
                     <div class="shortcut-item" style="grid-column: 1 / -1;"><kbd>Delete</kbd> Kijelölt klipek törlése</div>
                 </div>
 
+                <div style="margin-top: 25px; padding: 15px; background: rgba(0, 255, 213, 0.05); border: 1px solid rgba(0, 255, 213, 0.2); border-radius: 4px; text-align: center;">
+                    <p style="margin: 0 0 10px 0; font-size: 0.85rem; color: #ccc;">
+        Ezt a DAW-ot egyedül fejlesztem, szabadidőmben. Ha tetszik és hasznosnak találod, sokat segítesz vele, ha meghívsz egy virtuális kávéra!
+                    </p>
+                    <a href="https://buymeacoffee.com/tormalac" target="_blank" style="display: inline-block; background: var(--accent); color: #000; padding: 8px 20px; font-family: var(--font-mono); text-transform: uppercase; text-decoration: none; font-weight: bold; border-radius: 2px; font-size: 0.8rem; transition: transform 0.1s;">
+        Buy me a coffee
+                    </a>
+                </div>
+
                 <div class="welcome-footer">
                     <label><input type="checkbox" id="hide-welcome-cb"> Ne mutasd indításkor</label>
                     <button id="close-welcome">Let's Rock!</button>
