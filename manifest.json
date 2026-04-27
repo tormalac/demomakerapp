@@ -19,4 +19,20 @@
   "scope": "/",
   "theme_color": "#00ffd5",
   "description": "Virtual Analog Drum Machine and Synth DAW"
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "1440x3120",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobil nézet"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Asztali nézet"
+    }
+  ]
 }
